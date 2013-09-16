@@ -83,6 +83,16 @@ if (!isDedicated) then {
 	[] execVM "Scripts\kh_actions.sqf";
 };
 
+// Logo watermark: adding a logo in the bottom left corner of the screen with the server name in it
+if (!isNil "dayZ_serverName") then {
+	[] spawn {
+		waitUntil {(!isNull Player) and (alive Player) and (player == player)};
+		waituntil {!(isNull (findDisplay 46))};
+		5 cutRsc ["wm_disp","PLAIN"];
+		((uiNamespace getVariable "wm_disp") displayCtrl 1) ctrlSetText dayZ_serverName;
+	};
+};
+
 [4,false,true] execFSM "Scripts\core_time.fsm";
 [] execVM "Scripts\esc.sqf";
 [] execVM "Scripts\seat_action.sqf";
