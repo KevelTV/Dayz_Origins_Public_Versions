@@ -69,6 +69,19 @@ if (!isDedicated) then {
 	_playerMonitor = 	[] execVM "\z\addons\dayz_code\system\player_monitor.sqf";
 	_nul = [] execVM "Camera\loginCamera.sqf";
 	
+	//Delete HeliCrash Crater
+	"heliCrash" addPublicVariableEventHandler {
+        _list = nearestObjects [_this select 1, ["CraterLong"], 100];
+        {deleteVehicle _x;} foreach _list;
+    };
+	// Logo watermark: adding a logo in the bottom left corner of the screen with the server name in it
+	if (!isNil "dayZ_serverName") then {
+	[] spawn {
+		waitUntil {(!isNull Player) and (alive Player) and (player == player)};
+		waituntil {!(isNull (findDisplay 46))};
+		5 cutRsc ["wm_disp","PLAIN"];
+		((uiNamespace getVariable "wm_disp") displayCtrl 1) ctrlSetText dayZ_serverName;
+	
 	#include "gcam\gcam_config.hpp"
 	#include "gcam\gcam_functions.sqf"
 
@@ -78,19 +91,10 @@ if (!isDedicated) then {
 
 		if (serverCommandAvailable "#kick") then { (findDisplay 46) displayAddEventHandler ["keyDown", "_this call fnc_keyDown"]; };
 	#endif
+	};
 
 	//Remove the double slashes on the line below to enable auto refuelling
 	[] execVM "Scripts\kh_actions.sqf";
-};
-
-// Logo watermark: adding a logo in the bottom left corner of the screen with the server name in it
-if (!isNil "dayZ_serverName") then {
-	[] spawn {
-		waitUntil {(!isNull Player) and (alive Player) and (player == player)};
-		waituntil {!(isNull (findDisplay 46))};
-		5 cutRsc ["wm_disp","PLAIN"];
-		((uiNamespace getVariable "wm_disp") displayCtrl 1) ctrlSetText dayZ_serverName;
-	};
 };
 
 [4,false,true] execFSM "Scripts\core_time.fsm";
